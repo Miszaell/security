@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -25,4 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("id") Long id,
             @Param("password") String password
     );
+
+    @Query(value = "SELECT * FROM user WHERE matricula=:matricula AND password=:password", nativeQuery = true)
+    public Optional<User> login(@Param("matricula") String matricula, @Param("password") String password);
 }

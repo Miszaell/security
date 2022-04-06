@@ -15,8 +15,12 @@ public class Conversation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idUser")
-    private User user;
+    @JoinColumn(name = "idUserOne")
+    private User userOne;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idUserTwo")
+    private User userTwo;
 
     private LocalDateTime created_at;
 }

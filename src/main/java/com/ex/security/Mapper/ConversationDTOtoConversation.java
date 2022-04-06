@@ -18,8 +18,10 @@ public class ConversationDTOtoConversation implements IMapper<ConversationDTO, C
     @Override
     public Conversation map(ConversationDTO conversationDTO) {
         Conversation conversation = new Conversation();
-        User user = this.userService.findById(conversationDTO.getId_user());
-        conversation.setUser(user);
+        User userOne = this.userService.findById(conversationDTO.getId_user_one());
+        User userTwo = this.userService.findById(conversationDTO.getId_user_two());
+        conversation.setUserOne(userOne);
+        conversation.setUserTwo(userTwo);
         return conversation;
     }
 }
