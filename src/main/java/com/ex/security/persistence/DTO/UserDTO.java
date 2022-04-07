@@ -9,4 +9,7 @@ public class UserDTO {
     private String matricula;
     private String nombre;
     private String password;
+    private String publicKeyPath;
+    private String privateKeyPath;
+
 }

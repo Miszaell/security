@@ -18,4 +18,9 @@ public class User {
     private String nombre;
 
     private String password;
+
+    private String publicKeyPath;
+
+    private String privateKeyPath;
+
 }

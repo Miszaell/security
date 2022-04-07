@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ConversationDTO {
 
     private Long id;
+    private String conversationPath;
     private Long id_user_one;
     private Long id_user_two;
-    private LocalDateTime created_at;
 }

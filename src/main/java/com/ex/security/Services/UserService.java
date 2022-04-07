@@ -5,6 +5,7 @@ import com.ex.security.Mapper.UserDTOtoUser;
 import com.ex.security.persistence.DTO.UserDTO;
 import com.ex.security.persistence.Entity.User;
 import com.ex.security.persistence.Repository.UserRepository;
+import com.ex.security.utils.CypherCl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,12 @@ public class UserService {
 
     public User createUser(UserDTO userDTO) {
         User user = mapper.map(userDTO);
-
+        CypherCl cypherCl = new CypherCl();
+        try {
+            cypherCl.generateKeyPair(user.getPublicKeyPath(), user.getPrivateKeyPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return this.repo.save(user);
     }
 

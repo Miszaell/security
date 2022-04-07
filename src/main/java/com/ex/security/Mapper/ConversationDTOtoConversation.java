@@ -20,6 +20,8 @@ public class ConversationDTOtoConversation implements IMapper<ConversationDTO, C
         Conversation conversation = new Conversation();
         User userOne = this.userService.findById(conversationDTO.getId_user_one());
         User userTwo = this.userService.findById(conversationDTO.getId_user_two());
+
+        conversation.setConversationPath(conversationDTO.getConversationPath());
         conversation.setUserOne(userOne);
         conversation.setUserTwo(userTwo);
         return conversation;

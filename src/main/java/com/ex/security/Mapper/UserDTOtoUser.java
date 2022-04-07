@@ -12,8 +12,9 @@ public class UserDTOtoUser  implements IMapper<UserDTO, User>{
 
         user.setNombre(userDTO.getNombre());
         user.setMatricula(userDTO.getMatricula());
-
         user.setPassword(userDTO.getPassword());
+        user.setPrivateKeyPath(userDTO.getPrivateKeyPath()+"_private.enc");
+        user.setPublicKeyPath(userDTO.getPublicKeyPath()+"_public.enc");
 
         return user;
     }

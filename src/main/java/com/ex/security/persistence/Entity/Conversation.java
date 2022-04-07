@@ -14,6 +14,8 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String conversationPath;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUserOne")
     private User userOne;
@@ -22,5 +24,4 @@ public class Conversation {
     @JoinColumn(name = "idUserTwo")
     private User userTwo;
 
-    private LocalDateTime created_at;
 }
