@@ -6,7 +6,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -43,5 +45,11 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @PostMapping("/uploadSign")
+    public ResponseEntity<Void> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
+        this.authService.upFile(file);
+        return ResponseEntity.ok().build();
     }
 }

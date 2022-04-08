@@ -30,13 +30,15 @@ public class ConversationController {
     }
 
     @PostMapping
-    public Conversation createConversation(@RequestBody ConversationDTO conversationDTO) {
-        return this.conversationService.createConversation(conversationDTO);
+    public ResponseEntity<Void> createConversation(@RequestBody ConversationDTO conversationDTO, @RequestParam("message") String message) {
+        this.conversationService.createConversation(conversationDTO, message);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> updateCpnversation(@RequestParam("id") Long id, @RequestParam("idUserOne") Long idUserOne, @RequestParam("idUserTwo") Long idUserTwo) {
-        this.conversationService.updateConversation(id, idUserOne, idUserTwo);
+    public ResponseEntity<Void> updateCpnversation(@RequestParam("id") Long id, @RequestParam("message") String message) {
+        this.conversationService.updateConversation(id, message);
 
         return ResponseEntity.noContent().build();
     }

@@ -24,23 +24,28 @@ public class ConversationService {
         this.mnapper = mnapper;
     }
 
-    public Conversation createConversation(ConversationDTO conversationDTO){
+    public void createConversation(ConversationDTO conversationDTO, String message){
         Conversation conversation = mnapper.map(conversationDTO);
 
         CypherCl cypherCl = new CypherCl();
-        User user = conversation.getUserTwo();
-        String publicKey = user.getPublicKeyPath();
-        String message = "2520160077-hello";
-        System.out.print(conversation.getConversationPath());
+        User user = conversation.getUserOne();
+        User user2 = conversation.getUserTwo();
+        String privateKeyPath = "uploads/"+user.getMatricula()+"_"+user.getNombre()+"_private.enc";
+        String keyPath = "src/main/resources/Keys/ConversationKey/"+user.getMatricula() +"_"+user2.getMatricula()+".enc";
         try {
-            String data = cypherCl.encrypt(message, publicKey);
-            System.out.print(data);
-            cypherCl.setMessages(conversation.getConversationPath(),data);
+            byte[] sign = cypherCl.signMessage(privateKeyPath, message);
+            boolean verifyResult = cypherCl.verifySign(user.getPublicKeyPath(), message, sign);
+            if (verifyResult) {
+                cypherCl.setMessages(conversation.getConversationPath(),message);
+                this.repo.save(conversation);
+            } else {
+                throw new ConversationExceptions("Key invalid", HttpStatus.NOT_ACCEPTABLE);
+            }
         } catch (Exception e) {
-            throw new ConversationExceptions("The message couldn't be saved", HttpStatus.CONFLICT);
+            e.printStackTrace();
+        throw new ConversationExceptions("Cannot create a conversation", HttpStatus.CONFLICT);
         }
 
-        return this.repo.save(conversation);
     }
 
     public List<Conversation> findAll() {
@@ -60,27 +65,35 @@ public class ConversationService {
 
         try {
             String convers = cypherCl.getMessages(conver.getConversationPath());
-            String decrypt = cypherCl.decrypt(convers, user.getPrivateKeyPath());
-            System.out.println(convers);
-            System.out.println(decrypt);
+            System.out.print(convers);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return conver;
     }
 
-    public void updateConversation(Long id, Long idUserOne, Long idUserTwo){
+    public void updateConversation(Long id, String message){
         Optional<Conversation> conversation = this.repo.findById(id);
 
         if (conversation.isEmpty()){
             throw  new ConversationExceptions("Conversation not found", HttpStatus.NOT_FOUND);
         }
-        String messages;
         CypherCl cypherCl = new CypherCl();
         Conversation convr = conversation.get();
+        User user = convr.getUserOne();
+        User user2 = convr.getUserTwo();
+        String privateKeyPath = "uploads/"+user.getMatricula()+"_"+user.getNombre()+"_private.enc";
+        String keyPath = "src/main/resources/Keys/ConversationKey/"+user.getMatricula() +"_"+user2.getMatricula()+".enc";
         try {
-            messages = cypherCl.getMessages(convr.getConversationPath());
-            System.out.print(messages);
+            byte[] sign = cypherCl.signMessage(privateKeyPath, message);
+            boolean verifyResult = cypherCl.verifySign(user.getPublicKeyPath(), message, sign);
+            if (verifyResult) {
+                String cnv = cypherCl.getMessages(convr.getConversationPath());
+                String data = cnv +"\n"+ message;
+                cypherCl.updateFile(convr.getConversationPath(),data);
+            } else {
+                throw new ConversationExceptions("Key invalid", HttpStatus.NOT_ACCEPTABLE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

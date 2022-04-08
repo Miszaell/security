@@ -15,6 +15,7 @@ public class Conversation {
     private Long id;
 
     private String conversationPath;
+    private String conversationKey;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUserOne")
